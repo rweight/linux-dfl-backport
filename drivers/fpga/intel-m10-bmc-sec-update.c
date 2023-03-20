@@ -382,9 +382,7 @@ static int m10bmc_sec_retimer_eeprom_load(struct m10bmc_sec *sec)
 {
 	int ret;
 
-	ret = m10bmc_fw_state_enter(sec->m10bmc, M10BMC_FW_STATE_SEC_UPDATE);
-	if (ret)
-		return -EBUSY;
+	m10bmc_fw_state_set(sec->m10bmc, M10BMC_FW_RETIMER_EEPROM_LOAD);
 
 	ret = retimer_check_idle(sec);
 	if (ret)
@@ -401,7 +399,7 @@ static int m10bmc_sec_retimer_eeprom_load(struct m10bmc_sec *sec)
 	ret = poll_retimer_preload_done(sec);
 
 fw_state_exit:
-	m10bmc_fw_state_exit(sec->m10bmc);
+	m10bmc_fw_state_set(sec->m10bmc, M10BMC_FW_STATE_NORMAL);
 	return ret;
 }
 
